@@ -21,18 +21,28 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MineChat extends JavaPlugin 
 {
     // Commands
-    private PluginCommand pmCommand;
     private PluginCommand sayCommand;
-    private PluginCommand mineChatCommand;
     
     // Listeners
     private Listener playerActivityListener;
     private Listener messageListener;
+    private PluginCommand mineChatCommand;
     
     // Configuration
     private PluginConfiguration config;
+    private PluginCommand pmCommand;
     
     private PlayerRepository players = new PlayerRepository();
+
+    private void initializeCommands()
+    {
+        this.sayCommand
+                = new SayCommand(this,this.config);
+        this.pmCommand
+                = new PrivateMessageCommand(this,this.config,this.players);
+        this.mineChatCommand
+                = new MineChatCommand(this,this.config);
+    }
 
     /**
      * Called when this plugin is enabled
@@ -47,17 +57,6 @@ public class MineChat extends JavaPlugin
         
         registerCommands();
         registerListeners();
-    }
-
-
-    private void initializeCommands()
-    {
-        this.sayCommand      
-            = new SayCommand(this,this.config);
-        this.pmCommand       
-            = new PrivateMessageCommand(this,this.config,this.players);
-        this.mineChatCommand 
-            = new MineChatCommand(this,this.config);
     }
     
     private void initializeListeners()
@@ -81,17 +80,7 @@ public class MineChat extends JavaPlugin
     }
 
     // -----------------------------------------------------------------------
-    
-    /**
-     * Sets up the listeners for this plugin
-     */
-    private void registerListeners()
-    {
-        PluginManager manager = getServer().getPluginManager();
-        
-        manager.registerEvents( this.messageListener, this);
-        manager.registerEvents( this.playerActivityListener, this);
-    }
+
     
     /**
      * Sets up the commands that this plugin may use
@@ -101,6 +90,17 @@ public class MineChat extends JavaPlugin
         registerCommand( this.sayCommand );
         registerCommand( this.pmCommand );
         registerCommand( this.mineChatCommand );
+    }
+
+    /**
+     * Sets up the listeners for this plugin
+     */
+    private void registerListeners()
+    {
+        PluginManager manager = getServer().getPluginManager();
+
+        manager.registerEvents( this.messageListener, this);
+        manager.registerEvents( this.playerActivityListener, this);
     }
     
     private void registerCommand( BukkitCommand command )
