@@ -1,0 +1,6 @@
+name: MineChat
+main: com.artificialai.minechat.MineChat
+version: 0.0.2
+author: ArtificialAI
+description: Minecraft Chat Management Plugin
+softdepend: [Vault,PermissionsEx, bPermissions]
